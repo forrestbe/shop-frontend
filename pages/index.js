@@ -13,8 +13,6 @@ export default function Home() {
           Forrest Brownlie
         </p>
       </main>
-
-      <Footer />
     </div>
   )
 }
