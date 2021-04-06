@@ -19,7 +19,9 @@
     "jsx": "preserve",
     "baseUrl": "./",
     "paths": {
-      "@img/*": ["assets/img/*"]
+      "@img/*": ["assets/img/*"],
+      "@components/*": ["components/*"],
+      "@styles/*": ["styles/*"]
     }
   },
   "include": [
