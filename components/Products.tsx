@@ -1,5 +1,5 @@
 import React from 'react';
-import gql from 'graphql-tag/src';
+import gql from 'graphql-tag';
 import { useQuery } from '@apollo/client';
 import styled from 'styled-components';
 import Product from './Product';
