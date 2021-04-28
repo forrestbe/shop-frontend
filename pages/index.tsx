@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { TickerComponent } from '../components/Ticker';
 import gql from "graphql-tag";
 import { useQuery } from '@apollo/client';
+import request from 'graphql-request';
 
 const HeaderStyles = styled.div`
   display: grid;
@@ -74,16 +75,38 @@ const FRONT_PAGE_PRODUCTS_QUERY = gql`
 
 export default function IndexPage(): JSX.Element {
   const tickerText = 'End of season sale: Explore here';
-  const { data, loading } = useQuery(FRONT_PAGE_PRODUCTS_QUERY, {
-    variables: {
-      skip: 0,
-      first: 8
-    }
-  });
-  if (loading) {
-    return <p>Loading</p>;
-  }
-  const { allProducts } = data;
+  const [products, setProducts] = useState([])
+  // const { data, loading } = useQuery(FRONT_PAGE_PRODUCTS_QUERY, {
+  //   variables: {
+  //     skip: 0,
+  //     first: 8
+  //   }
+  // });
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { products } = await request(
+        'https://api-eu-central-1.graphcms.com/v2/cknng90judu7b01xg8gbg9lzu/master',
+        `
+      { 
+        products {
+          id
+          name
+          slug
+          description
+          images(first: 1) {
+            url
+          }
+        }
+      }
+    `
+      );
+
+      setProducts(products)
+    };
+    fetchProducts();
+  }, []);
+
   return (
     <React.Fragment>
       <HeaderStyles>
@@ -95,9 +118,9 @@ export default function IndexPage(): JSX.Element {
       </HeaderStyles>
       <TickerComponent tickerText={tickerText} />
       <ProductGridStyles>
-        {allProducts.map(product => (
+        {products.map(product => (
           <li key={product?.id}>
-            <img src={product?.photo?.image?.publicUrlTransformed} alt={product?.name} />
+            <img src={product?.images[0]?.url} alt={product?.name} />
           </li>
         ))}
       </ProductGridStyles>
